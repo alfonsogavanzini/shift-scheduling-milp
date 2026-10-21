@@ -1,0 +1,22 @@
+{
+  "employees": 13,
+  "days": 28,
+  "total_demand": 208,
+  "binary_variables": 1092,
+  "constraints": 1876,
+  "lp_relaxation_bound": 132.0,
+  "milp_objective": 132.0,
+  "milp_status": "Optimal",
+  "milp_gap": 0.0,
+  "milp_seconds": 1.48,
+  "pref_cost": 132,
+  "fairness_spread": 0.0,
+  "understaffed": 0.0,
+  "validator": {
+    "feasible": true,
+    "violations": [],
+    "objective_solver": 132.0,
+    "objective_validator": 132.0,
+    "match": true
+  }
+}

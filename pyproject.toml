@@ -1,0 +1,10 @@
+[project]
+name = "rostering-milp"
+version = "0.1.0"
+description = "Planificación de turnos con programación lineal entera (PuLP + HiGHS)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning:pulp.*"]

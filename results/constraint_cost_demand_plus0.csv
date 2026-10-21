@@ -1,0 +1,9 @@
+demand_increase_pct,relaxed,delta_vs_base,status,objective,pref_cost,fairness_spread,understaffed,surplus,seconds,gap
+0,(ninguna: modelo completo),0.0,Optimal,132.0,132,0.0,0.0,0,1.29,0.0
+0,"Descanso entre turnos (A→M, N→M, N→A)",0.0,Optimal,132.0,132,0.0,0.0,0,1.81,0.0
+0,Máx. 5 días seguidos,0.0,Optimal,132.0,132,0.0,0.0,0,1.01,0.0
+0,Máx. 3 noches seguidas,0.0,Optimal,132.0,132,0.0,0.0,1,1.33,0.0
+0,Tope semanal de turnos,-24.0,Optimal,108.0,108,0.0,0.0,3,1.56,0.0
+0,Mínimo de turnos del contrato,0.0,Optimal,132.0,132,0.0,0.0,3,1.29,0.0
+0,Vacaciones / bajas,0.0,Optimal,132.0,132,0.0,0.0,4,0.84,0.0
+0,Equidad de fines de semana (peso = 0),8.0,Optimal,140.0,132,4.0,0.0,0,0.22,0.0
