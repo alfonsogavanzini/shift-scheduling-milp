@@ -44,38 +44,76 @@ pytest                      # ~3 s
 
 ## Formulación matemática
 
-**Conjuntos.** $E$ empleados, $D=\{0,\dots,27\}$ días, $S=\{M,A,N\}$ turnos, $W$ semanas naturales, $D_{fs}\subset D$ días de fin de semana, $F\subseteq E$ empleados de jornada completa (grupo sobre el que se mide la equidad).
+**Conjuntos.** $`E`$ empleados, $`D=\{0,\dots,27\}`$ días, $`S=\{M,A,N\}`$ turnos, $`W`$ semanas naturales, $`D_{fs}\subset D`$ días de fin de semana, $`F\subseteq E`$ empleados de jornada completa (grupo sobre el que se mide la equidad).
 
-**Parámetros.** $r_{ds}$ demanda; $p_{eds}$ penalización de preferencia; $m_e$ mínimo de turnos del contrato; $c_e$ tope semanal; $U$ pares (empleado, día) bloqueados; $K=5$ días seguidos máximos; $K_N=3$ noches seguidas máximas; $\lambda_u=100$, $\lambda_f=2$.
+**Parámetros.** $`r_{ds}`$ demanda; $`p_{eds}`$ penalización de preferencia; $`m_e`$ mínimo de turnos del contrato; $`c_e`$ tope semanal; $`U`$ pares (empleado, día) bloqueados; $`K=5`$ días seguidos máximos; $`K_N=3`$ noches seguidas máximas; $`\lambda_u=100`$, $`\lambda_f=2`$.
 
-**Variables.** $x_{eds}\in\{0,1\}$ (el empleado $e$ trabaja el turno $s$ el día $d$); $u_{ds}\in\mathbb{Z}_{\ge0}$ (personas que faltan); $w^{\max}, w^{\min}\ge 0$.
+**Variables.** $`x_{eds}\in\{0,1\}`$ (el empleado $`e`$ trabaja el turno $`s`$ el día $`d`$); $`u_{ds}\in\mathbb{Z}_{\ge 0}`$ (personas que faltan); $`w^{\max}, w^{\min}\ge 0`$.
 
-$$\min \sum_{e,d,s} p_{eds}\,x_{eds} \;+\; \lambda_f\,(w^{\max}-w^{\min}) \;+\; \lambda_u \sum_{d,s} u_{ds}$$
+**Función objetivo** (preferencias + equidad + turnos sin cubrir):
 
-sujeto a
+```math
+\min \sum_{e,d,s} p_{eds}\,x_{eds} + \lambda_f\,(w^{\max}-w^{\min}) + \lambda_u \sum_{d,s} u_{ds}
+```
 
-$$\sum_{s} x_{eds} \le 1 \qquad \forall e,d \tag{1 turno al día}$$
+**Restricciones.**
 
-$$\sum_{e} x_{eds} + u_{ds} \ge r_{ds} \qquad \forall d,s \tag{cobertura}$$
+*1. Un turno al día como máximo:*
 
-$$\sum_{d'=d}^{d+K}\sum_{s} x_{ed's} \le K \qquad \forall e,\; d \le |D|-K-1 \tag{máx. días seguidos}$$
+```math
+\sum_{s} x_{eds} \le 1 \qquad \forall e,d
+```
 
-$$\sum_{d'=d}^{d+K_N} x_{ed'N} \le K_N \qquad \forall e,\; d \le |D|-K_N-1 \tag{máx. noches seguidas}$$
+*2. Cobertura de la demanda (con holgura penalizada):*
 
-$$\sum_{d\in w}\sum_{s} x_{eds} \le c_e \qquad \forall e,\; w\in W \tag{tope semanal}$$
+```math
+\sum_{e} x_{eds} + u_{ds} \ge r_{ds} \qquad \forall d,s
+```
 
-$$\sum_{d,s} x_{eds} \ge m_e \qquad \forall e \tag{mínimo del contrato}$$
+*3. Máximo de días seguidos trabajando:*
 
-$$\sum_{s} x_{eds} = 0 \qquad \forall (e,d)\in U \tag{vacaciones}$$
+```math
+\sum_{d'=d}^{d+K}\sum_{s} x_{ed's} \le K \qquad \forall e,\; d \le |D|-K-1
+```
 
-$$w^{\min} \le \sum_{d\in D_{fs}}\sum_{s} x_{eds} \le w^{\max} \qquad \forall e\in F \tag{equidad}$$
+*4. Máximo de noches seguidas:*
+
+```math
+\sum_{d'=d}^{d+K_N} x_{ed'N} \le K_N \qquad \forall e,\; d \le |D|-K_N-1
+```
+
+*5. Tope semanal de turnos:*
+
+```math
+\sum_{d\in w}\sum_{s} x_{eds} \le c_e \qquad \forall e,\; w\in W
+```
+
+*6. Mínimo de turnos del contrato:*
+
+```math
+\sum_{d,s} x_{eds} \ge m_e \qquad \forall e
+```
+
+*7. Vacaciones y bajas (días bloqueados):*
+
+```math
+\sum_{s} x_{eds} = 0 \qquad \forall (e,d)\in U
+```
+
+*8. Equidad en fines de semana (entre jornada completa):*
+
+```math
+w^{\min} \le \sum_{d\in D_{fs}}\sum_{s} x_{eds} \le w^{\max} \qquad \forall e\in F
+```
 
 **Descanso mínimo de 11 h.** Están prohibidas las sucesiones Tarde→Mañana (8 h de descanso), Noche→Mañana (0 h) y Noche→Tarde (8 h). Se implementan de dos formas equivalentes:
 
-- *pairwise:* una restricción por sucesión prohibida, p. ej. $x_{e,d,A}+x_{e,d+1,M}\le 1$.
-- *clique:* como $x_{e,d,A}+x_{e,d,N}\le 1$ ya se cumple por (1 turno al día), los conjuntos $\{A_d,N_d,M_{d+1}\}$ y $\{N_d,M_{d+1},A_{d+1}\}$ son cliques del grafo de conflictos, y bastan dos desigualdades por empleado y día:
+- *pairwise:* una restricción por sucesión prohibida, p. ej. $`x_{e,d,A}+x_{e,d+1,M}\le 1`$.
+- *clique:* como $`x_{e,d,A}+x_{e,d,N}\le 1`$ ya se cumple por la restricción 1, los conjuntos $`\{A_d,N_d,M_{d+1}\}`$ y $`\{N_d,M_{d+1},A_{d+1}\}`$ son cliques del grafo de conflictos, y bastan dos desigualdades por empleado y día:
 
-$$x_{e,d,A}+x_{e,d,N}+x_{e,d+1,M}\le 1, \qquad x_{e,d,N}+x_{e,d+1,M}+x_{e,d+1,A}\le 1$$
+```math
+x_{e,d,A}+x_{e,d,N}+x_{e,d+1,M}\le 1 \qquad\qquad x_{e,d,N}+x_{e,d+1,M}+x_{e,d+1,A}\le 1
+```
 
 La formulación clique es al menos tan fuerte como la pairwise (su región lineal está contenida en la otra) y usa menos restricciones.
 
